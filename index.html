@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>HBD GALE</title>
+  <!-- Bootstrap CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: linear-gradient(135deg, #001f4d, #003366);
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 3.5rem;
+      margin-bottom: 10px;
+      animation: glow 2s ease-in-out infinite alternate;
+      color: #cce0ff;
+      text-shadow: 0 0 5px #99bbff, 0 0 15px #6699ff, 0 0 25px #3366ff, 0 0 40px #0033cc;
+    }
+    p.message {
+      font-size: 1.75rem;
+      margin-bottom: 20px;
+      font-style: italic;
+      opacity: 0;
+      animation: fadeInUp 2s ease forwards;
+      animation-delay: 0s;
+      color: #a9c4ff;
+    }
+    .btn {
+      background-color: #223366;
+      border: none;
+      padding: 15px 35px;
+      border-radius: 50px;
+      font-size: 1.2rem;
+      color: #cce0ff;
+      cursor: pointer;
+      box-shadow: 0 0 10px #4466aa;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      user-select: none;
+    }
+    .btn:hover {
+      background-color: #335599;
+      box-shadow: 0 0 20px #6699ff;
+    }
+    @keyframes glow {
+      0% { text-shadow: 0 0 5px #99bbff, 0 0 15px #6699ff, 0 0 25px #3366ff, 0 0 40px #0033cc; }
+      100% { text-shadow: 0 0 10px #cce0ff, 0 0 20px #99bbff, 0 0 30px #6699ff, 0 0 50px #3366ff; }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background-color: #99bbff;
+      opacity: 0.9;
+      border-radius: 50%;
+      animation-name: confetti-fall;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+    @keyframes confetti-fall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+    #surprise {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 25px;
+      animation: fadeInUp 1.4s ease;
+    }
+    #surprise h2 {
+      color: #ffe066;
+      font-size: 2rem;
+      margin-bottom: 10px;
+      text-shadow: 0 0 10px #4466aa;
+    }
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      max-width: 95vw;
+    }
+    .gallery img {
+      max-width: 200px;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 14px;
+      box-shadow: 0 2px 12px #22336650;
+      border: 3px solid #99bbff;
+      background: #fff;
+      transition: transform 0.3s cubic-bezier(.4,2,.6,1), box-shadow 0.3s cubic-bezier(.4,2,.6,1);
+      cursor: pointer;
+    }
+    .gallery img:hover {
+      transform: scale(1.13);
+      box-shadow: 0 6px 32px #00224499, 0 0 12px #e7eafc;
+      border-color: #ffe066;
+      z-index: 2;
+    }
+    @media (max-width: 1024px) {.gallery img { max-width: 170px; height: 180px; }}
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; margin-bottom: 8px;}
+      p.message { font-size: 1.25rem; margin-bottom: 15px; padding: 0 10px;}
+      .btn { padding: 12px 25px; font-size: 1rem;}
+      .gallery img { max-width: 130px; height: 110px;}
+    }
+    @media (max-width: 500px) {
+      h1 { font-size: 2rem;}
+      p.message { font-size: 1rem;}
+      .btn { padding: 10px 20px; font-size: 0.9rem;}
+      .gallery { gap: 8px;}
+      .gallery img { max-width: 90px; height: 70px;}
+    }
+    /* Balloon and Cake Animations */
+    .balloon {
+      position: absolute;
+      bottom: -120px;
+      width: 60px;
+      height: 80px;
+      border-radius: 50% 50% 45% 45% / 60% 60% 40% 40%;
+      box-shadow: 0 8px 24px #ff69b4cc;
+      animation: balloonUp 7s linear infinite;
+      z-index: 1;
+      opacity: 0.98;
+    }
+    .balloon:after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: -18px;
+      width: 4px;
+      height: 22px;
+      background: #fff;
+      border-radius: 2px;
+      transform: translateX(-50%);
+    }
+    @keyframes balloonUp {
+      0% { bottom: -120px; opacity: 0.8; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { bottom: 110vh; opacity: 0; }
+    }
+    .cake {
+      position: absolute;
+      left: 50%;
+      bottom: 40px;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 90px;
+      z-index: 2;
+      animation: cakeBounce 2.5s ease-in-out infinite;
+      opacity: 0.98;
+    }
+    .cake-base {
+      width: 120px;
+      height: 50px;
+      background: #ffe066;
+      border-radius: 0 0 30px 30px;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      box-shadow: 0 4px 16px #ffe066cc;
+    }
+    .cake-icing {
+      width: 120px;
+      height: 30px;
+      background: #ffb6c1;
+      border-radius: 30px 30px 20px 20px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      box-shadow: 0 2px 8px #ff69b4cc;
+    }
+    .cake-candle {
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      width: 8px;
+      height: 28px;
+      background: #fff;
+      border-radius: 4px;
+      transform: translateX(-50%);
+      z-index: 3;
+    }
+    .cake-flame {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      width: 12px;
+      height: 12px;
+      background: radial-gradient(circle, #ffe066 60%, #ffb300 100%);
+      border-radius: 50%;
+      transform: translateX(-50%);
+      animation: flameFlicker 0.7s infinite alternate;
+    }
+    @keyframes flameFlicker {
+      0% { opacity: 1; transform: translateX(-50%) scale(1); }
+      100% { opacity: 0.7; transform: translateX(-50%) scale(1.15); }
+    }
+    @keyframes cakeBounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-12px); }
+    }
+    /* Dialog */
+    #nameDialog {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0, 0, 50, 0.85);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .dialog-content {
+      background: #001f4d;
+      padding: 30px 40px;
+      border-radius: 15px;
+      box-shadow: 0 0 30px #4466aa;
+      text-align: center;
+      color: #cce0ff;
+      width: 90%;
+      max-width: 400px;
+    }
+    #nameInput {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      font-size: 1.2rem;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+    }
+    #errorMsg {
+      color: #ff6666;
+      margin-top: 10px;
+      display: none;
+    }
+
+    /* Countdown Overlay */
+    #countdownOverlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(135deg, #001f4d, #003366);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      color: #cce0ff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 8rem;
+      font-weight: bold;
+      user-select: none;
+      animation: fadeInScale 1s ease forwards;
+    }
+    @keyframes fadeInScale {
+      0% { opacity: 0; transform: scale(0.6);}
+      100% { opacity: 1; transform: scale(1);}
+    }
+    #countdownNumber {
+      animation: pulse 1s ease infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.7; }
+    }
+    @keyframes fadeOutScale {
+      0% { opacity: 1; transform: scale(1);}
+      100% { opacity: 0; transform: scale(0.6);}
+    }
+  </style>
+</head>
+<body>
+  <!-- Countdown Overlay -->
+  <div id="countdownOverlay">
+    <div id="countdownNumber">10</div>
+  </div>
+
+  <!-- Balloon container -->
+  <div id="balloon-container"></div>
+
+  <!-- Cake container -->
+  <div id="cake-container" style="display:none;">
+    <div class="cake">
+      <div class="cake-base"></div>
+      <div class="cake-icing"></div>
+      <div class="cake-candle">
+        <div class="cake-flame"></div>
+      </div>
+    </div>
+  </div>
+
+  <h1>HAPPY BIRTHDAY, GAYLE!</h1>
+  <p class="message">Happy Birthday, my dearest bestie Gayle! You’re the brightest soul and my forever partner in fun, laughter, and endless memories. May this year bring you success, health, joy, and everything your heart desires.</p>
+  <button class="btn" id="surpriseBtn">Click for Surprise 🎉</button>
+
+  <!-- Name Dialog -->
+  <div id="nameDialog">
+    <div class="dialog-content">
+      <h2>Enter your Name Gale</h2>
+      <input type="text" id="nameInput" placeholder="Enter name here" autofocus />
+      <button id="nameSubmitBtn" class="btn">Submit</button>
+      <p id="errorMsg">Incorrect name, please try again.</p>
+    </div>
+  </div>
+
+  <div id="surprise">
+    <h2>You are cherished and loved! 🌟</h2>
+    <div class="gallery">
+      <img src="IMG-20250920-WA0004.jpg" alt="Memory 1"/>
+      <img src="IMG-20250920-WA0005.jpg" alt="Memory 2"/>
+      <img src="IMG-20250920-WA0006.jpg" alt="Memory 3"/>
+      <img src="IMG-20250920-WA0007.jpg" alt="Memory 4"/>
+      <img src="IMG-20250920-WA0010.jpg" alt="Memory 5"/>
+    </div>
+  </div>
+
+  <!-- Bootstrap Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Hide main content except countdown initially
+    document.addEventListener("DOMContentLoaded", () => {
+      const mainContentElements = Array.from(document.body.children).filter(el => el.id !== 'countdownOverlay');
+      mainContentElements.forEach(el => { el.style.display = 'none'; });
+    });
+
+    window.onload = () => {
+      // Countdown timer logic
+      let countdown = 10;
+      const countdownOverlay = document.getElementById('countdownOverlay');
+      const countdownNumber = document.getElementById('countdownNumber');
+      const mainContentElements = Array.from(document.body.children).filter(el => el.id !== 'countdownOverlay');
+
+      const timerInterval = setInterval(() => {
+        countdown--;
+        if (countdown >= 0) {
+          countdownNumber.textContent = countdown;
+        }
+        if (countdown === 0) {
+          clearInterval(timerInterval);
+          // Animate overlay fade out
+          countdownOverlay.style.animation = 'fadeOutScale 1s ease forwards';
+          // Show main content after fade out
+          setTimeout(() => {
+            countdownOverlay.style.display = 'none';
+            mainContentElements.forEach(el => { el.style.display = ''; });
+            // Fade in birthday message after content display
+            setTimeout(() => {
+              document.querySelector('.message').style.opacity = 1;
+            }, 100);
+          }, 1000);
+        }
+      }, 1000);
+    }
+
+    // Confetti
+    function createConfetti() {
+      const confetti = document.createElement('div');
+      confetti.classList.add('confetti');
+      confetti.style.left = Math.random() * window.innerWidth + 'px';
+      confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 80%)`;
+      confetti.style.width = confetti.style.height = (Math.random() * 8 + 6) + 'px';
+      confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+      document.body.appendChild(confetti);
+      setTimeout(() => { confetti.remove(); }, 4000);
+    }
+    let confettiInterval;
+    function startConfetti() {
+      confettiInterval = setInterval(createConfetti, 150);
+      setTimeout(() => clearInterval(confettiInterval), 10000);
+    }
+
+    // Balloons
+    function createBalloon() {
+      const balloon = document.createElement('div');
+      balloon.className = 'balloon';
+      balloon.style.left = Math.random() * (window.innerWidth - 60) + 'px';
+      balloon.style.background = `radial-gradient(circle at 60% 40%, hsl(${Math.random()*360},80%,80%) 70%, hsl(${Math.random()*360},70%,60%) 100%)`;
+      balloon.style.animationDuration = (Math.random() * 3 + 5) + 's';
+      document.getElementById('balloon-container').appendChild(balloon);
+      setTimeout(() => { balloon.remove(); }, 7000);
+    }
+    function startBalloons() {
+      let balloonCount = 0;
+      const balloonInterval = setInterval(() => {
+        createBalloon();
+        balloonCount++;
+        if (balloonCount > 18) clearInterval(balloonInterval);
+      }, 350);
+    }
+
+    // Cake
+    function showCake() {
+      document.getElementById('cake-container').style.display = 'block';
+      setTimeout(() => {
+        document.getElementById('cake-container').style.display = 'none';
+      }, 9000);
+    }
+
+    // Elements
+    const surpriseBtn = document.getElementById('surpriseBtn');
+    const nameDialog = document.getElementById('nameDialog');
+    const nameSubmitBtn = document.getElementById('nameSubmitBtn');
+    const nameInput = document.getElementById('nameInput');
+    const errorMsg = document.getElementById('errorMsg');
+    const surpriseSection = document.getElementById('surprise');
+
+    // Button click shows dialog
+    surpriseBtn.onclick = function() {
+      nameDialog.style.display = 'flex';
+      nameInput.value = '';
+      errorMsg.style.display = 'none';
+      nameInput.focus();
+    }
+
+    // Submit name
+    nameSubmitBtn.onclick = function() {
+      const enteredName = nameInput.value.trim().toLowerCase();
+      if (enteredName === "gale" || enteredName === "gale brianna") {
+        nameDialog.style.display = 'none';
+        surpriseSection.style.display = 'flex';
+        surpriseBtn.style.display = 'none';
+        startConfetti();
+        startBalloons();
+        showCake();
+      } else {
+        errorMsg.style.display = 'block';
+      }
+    }
+
+    // Enter key submits name
+    nameInput.addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        nameSubmitBtn.click();
+      }
+    });
+  </script>
+</body>
+</html>
